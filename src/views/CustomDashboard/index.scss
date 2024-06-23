@@ -1,0 +1,8 @@
+.dashboard {
+  --cols: 3;
+  .card {
+    &__value {
+      margin: calc(var(--base) / 5) 0 0 0;
+    }
+  }
+}

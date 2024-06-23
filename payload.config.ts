@@ -24,6 +24,13 @@ import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
+import Users from '@/collections/Users'
+import Pages from '@/collections/Pages'
+import Media from '@/collections/Media'
+import CustomDefaultView from '@/views/CustomDefault'
+import AfterNavLinks from '@/components/AfterNavLinks'
+import CustomDashboardView from '@/views/CustomDashboard'
+import Features from '@/collections/Features'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -31,43 +38,7 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   //editor: slateEditor({}),
   editor: lexicalEditor(),
-  collections: [
-    {
-      slug: 'users',
-      auth: true,
-      access: {
-        delete: () => false,
-        update: () => false,
-      },
-      fields: [],
-    },
-    {
-      slug: 'pages',
-      admin: {
-        useAsTitle: 'title',
-      },
-      fields: [
-        {
-          name: 'title',
-          type: 'text',
-        },
-        {
-          name: 'content',
-          type: 'richText',
-        },
-      ],
-    },
-    {
-      slug: 'media',
-      upload: true,
-      fields: [
-        {
-          name: 'text',
-          type: 'text',
-        },
-      ],
-    },
-  ],
+  collections: [Users, Pages, Media, Features],
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
@@ -91,9 +62,22 @@ export default buildConfig({
 
   admin: {
     autoLogin: {
-      email: 'dev@payloadcms.com',
-      password: 'test',
+      email: 'super@payloadcms.com',
+      password: 'super',
       prefillOnly: true,
+    },
+    components: {
+      afterNavLinks: [AfterNavLinks],
+      views: {
+        CustomDefaultView: {
+          path: '/custom-default-view',
+          Component: CustomDefaultView,
+        },
+        CustomDashboardView: {
+          path: '/dashboard',
+          Component: CustomDashboardView,
+        },
+      },
     },
   },
   async onInit(payload) {
@@ -108,6 +92,7 @@ export default buildConfig({
         data: {
           email: 'dev@payloadcms.com',
           password: 'test',
+          roles: ['admin'],
         },
       })
     }

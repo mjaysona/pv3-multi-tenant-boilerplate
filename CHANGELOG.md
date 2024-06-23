@@ -11,3 +11,19 @@ Simply add this import to your `(payload)/layout.tsx` file, and you'll be back i
 **We now load all required Payload static files from your Next.js `public` folder**
 
 In addition to pre-compiling SCSS, we are also shipping static files through the Next.js `/public` folder which will cut down on compilation time as well. Make sure you copy the `public/payload` folder into your repo as well as add the CSS import above.
+
+# Boilerplate
+
+## 0.1.1
+
+### Custom Templates and Dashboard
+
+Added basic examples for a custom default template and a dashboard with a separate route.
+
+### Superadmin Features
+
+Added Features collection for superadmin use in the future.
+
+### Role-Based Access Control
+
+Added basic examples for checking roles to manage user access.

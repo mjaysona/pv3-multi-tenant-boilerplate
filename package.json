@@ -1,6 +1,6 @@
 {
-  "name": "next-latest-starter",
-  "version": "0.1.0",
+  "name": "payload-3.0-boilerplate",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "scripts": {
