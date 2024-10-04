@@ -2,10 +2,10 @@ import React from 'react'
 
 import './index.scss'
 import CustomDefaultViewClient from './index.client'
-import { AdminViewComponent } from 'payload'
+import { AdminViewProps } from 'payload'
 import { DefaultTemplate } from '@payloadcms/next/templates'
 
-const CustomDefaultView: AdminViewComponent = (props) => {
+const CustomDefaultView: React.FC<AdminViewProps> = (props) => {
   const { initPageResult } = props
   const { permissions, req, visibleEntities } = initPageResult
   const { i18n, payload, user } = req

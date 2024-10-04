@@ -1,6 +1,6 @@
 'use client'
 
-import { useConfig } from '@payloadcms/ui/client'
+import { useConfig } from '@payloadcms/ui'
 import Link from 'next/link'
 import React from 'react'
 
@@ -8,7 +8,9 @@ const baseClass = 'after-nav-links nav-group'
 
 const AfterNavLinksClient: React.FC = () => {
   const {
-    routes: { admin: adminRoute },
+    config: {
+      routes: { admin: adminRoute },
+    },
   } = useConfig()
 
   return (

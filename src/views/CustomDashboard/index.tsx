@@ -1,10 +1,10 @@
 import { DefaultTemplate } from '@payloadcms/next/templates'
-import { AdminViewComponent } from 'payload'
+import { AdminViewProps } from 'payload'
 import React, { Fragment } from 'react'
 import DashboardClient from './index.client'
 import './index.scss'
 
-const CustomDashboardView: AdminViewComponent = async (props) => {
+const CustomDashboardView: React.FC<AdminViewProps> = async (props) => {
   const { initPageResult } = props
   const { permissions, req, visibleEntities } = initPageResult
   const { i18n, payload, user } = req

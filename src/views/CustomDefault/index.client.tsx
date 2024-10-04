@@ -3,9 +3,8 @@
 import React from 'react'
 
 import './index.scss'
-import { Button, useConfig } from '@payloadcms/ui/client'
+import { Button, SetStepNav, useConfig } from '@payloadcms/ui'
 import { redirect } from 'next/navigation'
-import { SetStepNav } from '@payloadcms/ui/client'
 import { InitPageResult } from 'payload'
 import Link from 'next/link'
 
@@ -16,7 +15,9 @@ type Props = {
 
 const CustomDefaultViewClient = ({ user, canAccessAdmin }: Props) => {
   const {
-    routes: { admin: adminRoute },
+    config: {
+      routes: { admin: adminRoute },
+    },
   } = useConfig()
 
   // This effect will only run one time and will allow us

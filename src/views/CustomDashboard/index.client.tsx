@@ -2,9 +2,8 @@
 
 import React, { Fragment } from 'react'
 
-import { useConfig } from '@payloadcms/ui/client'
+import { SetStepNav, useConfig } from '@payloadcms/ui'
 import { redirect } from 'next/navigation'
-import { SetStepNav } from '@payloadcms/ui/client'
 import { InitPageResult } from 'payload'
 
 type Props = {
@@ -14,7 +13,9 @@ type Props = {
 
 const DashboardClient = ({ user, canAccessAdmin }: Props) => {
   const {
-    routes: { admin: adminRoute },
+    config: {
+      routes: { admin: adminRoute },
+    },
   } = useConfig()
 
   // If an unauthorized user tries to navigate straight to this page,

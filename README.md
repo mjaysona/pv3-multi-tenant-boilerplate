@@ -85,3 +85,17 @@ In the `tsconfig.json` within this repo, you'll see that we have `paths` set up 
 ### Find a bug?
 
 Open an issue on this repo at `https://github.com/payloadcms/payload-3.0-demo` with as much detail as you can provide and we will tackle them as fast as we can. Let's get stable!
+
+---
+
+# Boilerplate Setup
+
+## Install packages
+
+1. `pnpm i`
+
+### Useful scripts
+
+**Update branch to use latest payload v3 changes.**
+
+`git merge upstream/main`

@@ -26,9 +26,6 @@ import { fileURLToPath } from 'url'
 import Users from '@/collections/Users'
 import Pages from '@/collections/Pages'
 import Media from '@/collections/Media'
-import CustomDefaultView from '@/views/CustomDefault'
-import AfterNavLinks from '@/components/AfterNavLinks'
-import CustomDashboardView from '@/views/CustomDashboard'
 import Features from '@/collections/Features'
 
 const filename = fileURLToPath(import.meta.url)
@@ -66,15 +63,15 @@ export default buildConfig({
       prefillOnly: true,
     },
     components: {
-      afterNavLinks: [AfterNavLinks],
+      afterNavLinks: ['@/components/AfterNavLinks'],
       views: {
         CustomDefaultView: {
+          Component: '@/views/CustomDefault',
           path: '/custom-default-view',
-          Component: CustomDefaultView,
         },
         CustomDashboardView: {
+          Component: '@/views/CustomDashboard',
           path: '/dashboard',
-          Component: CustomDashboardView,
         },
       },
     },

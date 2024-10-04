@@ -14,6 +14,7 @@ export interface Config {
     users: User;
     pages: Page;
     media: Media;
+    features: Feature;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -113,6 +114,17 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "features".
+ */
+export interface Feature {
+  id: string;
+  feature: string;
+  isEnabled: boolean;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -129,16 +141,16 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'features';
+        value: string | Feature;
       } | null);
   globalSlug?: string | null;
-  _lastEdited: {
-    user: {
-      relationTo: 'users';
-      value: string | User;
-    };
-    editedAt?: string | null;
+  user: {
+    relationTo: 'users';
+    value: string | User;
   };
-  isLocked?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
