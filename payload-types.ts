@@ -7,18 +7,42 @@
  */
 
 export interface Config {
+  auth: {
+    users: UserAuthOperations;
+  };
   collections: {
     users: User;
     pages: Page;
     media: Media;
-    features: Feature;
+    'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
+  };
+  db: {
+    defaultIDType: string;
   };
   globals: {};
   locale: null;
   user: User & {
     collection: 'users';
+  };
+}
+export interface UserAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
   };
 }
 /**
@@ -89,12 +113,32 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "features".
+ * via the `definition` "payload-locked-documents".
  */
-export interface Feature {
+export interface PayloadLockedDocument {
   id: string;
-  feature: string;
-  isEnabled: boolean;
+  document?:
+    | ({
+        relationTo: 'users';
+        value: string | User;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: string | Page;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: string | Media;
+      } | null);
+  globalSlug?: string | null;
+  _lastEdited: {
+    user: {
+      relationTo: 'users';
+      value: string | User;
+    };
+    editedAt?: string | null;
+  };
+  isLocked?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -131,6 +175,13 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "auth".
+ */
+export interface Auth {
+  [k: string]: unknown;
 }
 
 
