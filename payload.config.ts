@@ -27,6 +27,8 @@ import Users from '@/collections/Users'
 import Pages from '@/collections/Pages'
 import Media from '@/collections/Media'
 import Features from '@/collections/Features'
+import Tenants from '@/collections/Tenants'
+import Roles from '@/collections/Roles'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -34,7 +36,7 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   //editor: slateEditor({}),
   editor: lexicalEditor(),
-  collections: [Users, Pages, Media, Features],
+  collections: [Tenants, Roles, Users, Pages, Media, Features],
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
@@ -63,6 +65,7 @@ export default buildConfig({
       prefillOnly: true,
     },
     components: {
+      beforeNavLinks: ['@/components/TenantSelector#TenantSelectorRSC'],
       afterNavLinks: ['@/components/AfterNavLinks'],
       views: {
         CustomDefaultView: {

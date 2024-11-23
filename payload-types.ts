@@ -11,6 +11,8 @@ export interface Config {
     users: UserAuthOperations;
   };
   collections: {
+    tenants: Tenant;
+    roles: Role;
     users: User;
     pages: Page;
     media: Media;
@@ -48,15 +50,49 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tenants".
+ */
+export interface Tenant {
+  id: string;
+  name: string;
+  domains?:
+    | {
+        domain: string;
+        id?: string | null;
+      }[]
+    | null;
+  slug: string;
+  public?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roles".
+ */
+export interface Role {
+  id: string;
+  scope: 'global' | 'tenant';
+  label: string;
+  value?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
   id: string;
-  roles: ('super-admin' | 'admin' | 'editor' | 'viewer')[];
-  personalInformation?: {
-    firstName?: string | null;
-    lastName?: string | null;
-  };
+  roles: (string | Role)[];
+  tenants?:
+    | {
+        tenant: string | Tenant;
+        roles: (string | Role)[];
+        id?: string | null;
+      }[]
+    | null;
+  username?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -75,21 +111,8 @@ export interface User {
 export interface Page {
   id: string;
   title?: string | null;
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  slug?: string | null;
+  tenant: string | Tenant;
   updatedAt: string;
   createdAt: string;
 }
@@ -118,8 +141,10 @@ export interface Media {
  */
 export interface Feature {
   id: string;
-  feature: string;
+  label: string;
+  value?: string | null;
   isEnabled: boolean;
+  isActive: boolean;
   updatedAt: string;
   createdAt: string;
 }
@@ -130,6 +155,14 @@ export interface Feature {
 export interface PayloadLockedDocument {
   id: string;
   document?:
+    | ({
+        relationTo: 'tenants';
+        value: string | Tenant;
+      } | null)
+    | ({
+        relationTo: 'roles';
+        value: string | Role;
+      } | null)
     | ({
         relationTo: 'users';
         value: string | User;

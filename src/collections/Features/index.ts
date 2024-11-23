@@ -1,29 +1,46 @@
 import { CollectionConfig } from 'payload'
-import { admin, superAdmin } from '../utilities/access'
+import { propertyField } from '@/fields/Property'
+import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
 
 const Features: CollectionConfig = {
   admin: {
+    useAsTitle: 'label',
     group: 'Super Admin',
   },
   slug: 'features',
   access: {
-    create: superAdmin,
-    read: superAdmin || admin,
-    update: superAdmin,
-    delete: superAdmin,
+    create: isSuperAdmin,
+    read: isSuperAdmin,
+    update: isSuperAdmin,
+    delete: isSuperAdmin,
   },
   fields: [
     {
-      name: 'feature',
+      name: 'label',
       label: 'Feature',
       type: 'text',
       required: true,
     },
+    propertyField,
     {
-      name: 'isEnabled',
-      label: 'Is Enabled?',
-      type: 'checkbox',
-      required: true,
+      type: 'row',
+      fields: [
+        {
+          name: 'isEnabled',
+          type: 'checkbox',
+          defaultValue: false,
+          required: true,
+          admin: {
+            width: '140px',
+          },
+        },
+        {
+          name: 'isActive',
+          type: 'checkbox',
+          defaultValue: true,
+          required: true,
+        },
+      ],
     },
   ],
 }

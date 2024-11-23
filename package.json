@@ -21,38 +21,38 @@
     "node": "^18.20.2 || >=20.9.0"
   },
   "dependencies": {
-    "@payloadcms/db-mongodb": "3.0.0-beta.108",
-    "@payloadcms/db-postgres": "3.0.0-beta.108",
-    "@payloadcms/next": "3.0.0-beta.108",
-    "@payloadcms/richtext-lexical": "3.0.0-beta.108",
-    "@payloadcms/richtext-slate": "3.0.0-beta.108",
-    "@payloadcms/ui": "3.0.0-beta.108",
+    "@payloadcms/db-mongodb": "3.0.0-beta.112",
+    "@payloadcms/db-postgres": "3.0.0-beta.112",
+    "@payloadcms/next": "3.0.0-beta.112",
+    "@payloadcms/richtext-lexical": "3.0.0-beta.112",
+    "@payloadcms/richtext-slate": "3.0.0-beta.112",
+    "@payloadcms/ui": "3.0.0-beta.112",
     "babel-plugin-react-compiler": "0.0.0-experimental-48eb8f4-20240822",
     "cross-env": "^7.0.3",
     "graphql": "^16.8.2",
-    "next": "15.0.0-canary.170",
-    "payload": "3.0.0-beta.108",
-    "react": "19.0.0-rc-5dcb0097-20240918",
-    "react-dom": "19.0.0-rc-5dcb0097-20240918",
+    "next": "15.0.0-canary.173",
+    "payload": "3.0.0-beta.112",
+    "react": "19.0.0-rc-3edc000d-20240926",
+    "react-dom": "19.0.0-rc-3edc000d-20240926",
     "sharp": "0.32.6"
   },
   "devDependencies": {
-    "@payloadcms/graphql": "3.0.0-beta.108",
+    "@payloadcms/graphql": "3.0.0-beta.112",
     "@types/node": "^20.14.9",
-    "@types/react": "npm:types-react@19.0.0-rc.0",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.0",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "eslint": "^8.57.0",
-    "eslint-config-next": "15.0.0-canary.104",
+    "eslint-config-next": "15.0.0-canary.173",
     "typescript": "5.5.4"
   },
   "pnpm": {
     "overrides": {
-      "@types/react": "npm:types-react@19.0.0-rc.0",
-      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.0"
+      "@types/react": "npm:types-react@19.0.0-rc.1",
+      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
     }
   },
   "overrides": {
-    "@types/react": "npm:types-react@19.0.0-rc.0",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.0"
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
   }
 }
