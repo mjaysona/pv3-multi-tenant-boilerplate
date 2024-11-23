@@ -2,6 +2,8 @@ import type { CollectionConfig } from 'payload'
 import { noSpecialCharacters } from '../utilities/noSpecialCharacters'
 import { propertyField } from '@/fields/Property'
 import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
+import { tenantField } from '@/fields/TenantField'
+import { filterByTenantRead } from './access/byTenant'
 
 const TenantRoles: CollectionConfig = {
   slug: 'tenant-roles',
@@ -11,6 +13,7 @@ const TenantRoles: CollectionConfig = {
   },
   access: {
     create: isSuperAdmin,
+    read: filterByTenantRead,
     delete: isSuperAdmin,
     update: isSuperAdmin,
   },
@@ -28,6 +31,7 @@ const TenantRoles: CollectionConfig = {
       },
     },
     propertyField,
+    tenantField,
   ],
 }
 

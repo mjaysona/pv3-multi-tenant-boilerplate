@@ -30,7 +30,7 @@ const Users: CollectionConfig = {
       hasMany: true,
       required: true,
       access: {
-        read: hasTenantSelected,
+        read: (access) => !hasTenantSelected(access),
       },
       admin: {
         disableListColumn: true,

@@ -12,7 +12,7 @@ export const hasTenantSelected: FieldAccess = (args) => {
   const superAdmin = isSuperAdmin(args)
   const selectedTenant = cookies.get('payload-tenant')
 
-  if (superAdmin && !selectedTenant) {
+  if (superAdmin && selectedTenant) {
     return true
   }
 

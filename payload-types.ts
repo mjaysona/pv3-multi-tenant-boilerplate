@@ -75,6 +75,7 @@ export interface TenantRole {
   id: string;
   label: string;
   value?: string | null;
+  tenant: string | Tenant;
   updatedAt: string;
   createdAt: string;
 }

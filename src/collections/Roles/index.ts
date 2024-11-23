@@ -8,7 +8,7 @@ const Roles: CollectionConfig = {
   slug: 'roles',
   access: {
     create: isSuperAdmin,
-    read: (access) => Boolean(hasTenantSelected(access) && isSuperAdmin(access)),
+    read: (access) => Boolean(!hasTenantSelected(access) && isSuperAdmin(access)),
     update: isSuperAdmin,
     delete: isSuperAdmin,
   },
