@@ -50,16 +50,19 @@ export const canMutateTenant: Access = (args) => {
     return true
   }
 
-  return {
-    id: {
-      in:
-        req.user?.tenants
-          ?.map(({ roles, tenant }) =>
-            roles?.includes('tenant-admin')
-              ? tenant && (typeof tenant === 'string' ? tenant : tenant.id)
-              : null,
-          )
-          .filter(Boolean) || [],
-    },
-  }
+  return false
+
+  // Uncomment this code to allow tenant admins to mutate their own tenant
+  // return {
+  //   id: {
+  //     in:
+  //       req.user?.tenants
+  //         ?.map(({ roles, tenant }) =>
+  //           roles?.includes('tenant-admin')
+  //             ? tenant && (typeof tenant === 'string' ? tenant : tenant.id)
+  //             : null,
+  //         )
+  //         .filter(Boolean) || [],
+  //   },
+  // }
 }

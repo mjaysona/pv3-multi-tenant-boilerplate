@@ -12,6 +12,7 @@ export interface Config {
   };
   collections: {
     tenants: Tenant;
+    'tenant-roles': TenantRole;
     roles: Role;
     users: User;
     pages: Page;
@@ -68,11 +69,21 @@ export interface Tenant {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tenant-roles".
+ */
+export interface TenantRole {
+  id: string;
+  label: string;
+  value?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "roles".
  */
 export interface Role {
   id: string;
-  scope: 'global' | 'tenant';
   label: string;
   value?: string | null;
   updatedAt: string;
@@ -88,7 +99,7 @@ export interface User {
   tenants?:
     | {
         tenant: string | Tenant;
-        roles: (string | Role)[];
+        roles: (string | TenantRole)[];
         id?: string | null;
       }[]
     | null;
@@ -158,6 +169,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'tenants';
         value: string | Tenant;
+      } | null)
+    | ({
+        relationTo: 'tenant-roles';
+        value: string | TenantRole;
       } | null)
     | ({
         relationTo: 'roles';

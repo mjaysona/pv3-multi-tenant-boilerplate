@@ -2,19 +2,20 @@ import type { CollectionConfig } from 'payload'
 import { noSpecialCharacters } from '../utilities/noSpecialCharacters'
 import { propertyField } from '@/fields/Property'
 import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
-import { hasTenantSelected } from '@/fields/utilities/access/hasTenantSelected'
 
-const Roles: CollectionConfig = {
-  slug: 'roles',
+const TenantRoles: CollectionConfig = {
+  slug: 'tenant-roles',
+  labels: {
+    singular: 'User Role',
+    plural: 'User Roles',
+  },
   access: {
     create: isSuperAdmin,
-    read: (access) => Boolean(hasTenantSelected(access) && isSuperAdmin(access)),
-    update: isSuperAdmin,
     delete: isSuperAdmin,
+    update: isSuperAdmin,
   },
   admin: {
     useAsTitle: 'label',
-    group: 'Super Admin',
   },
   fields: [
     {
@@ -30,4 +31,4 @@ const Roles: CollectionConfig = {
   ],
 }
 
-export default Roles
+export default TenantRoles

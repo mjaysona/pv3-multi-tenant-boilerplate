@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { canMutateTenant, filterByTenantRead } from './access/byTenant'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
+import { hasSuperAdminRole } from '@/utilities/getRole'
 
 const Tenants: CollectionConfig = {
   slug: 'tenants',
@@ -13,6 +14,7 @@ const Tenants: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: 'Super Admin',
+    hidden: ({ user }) => !hasSuperAdminRole(user?.roles),
   },
   fields: [
     {

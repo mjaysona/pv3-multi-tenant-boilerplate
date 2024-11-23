@@ -1,6 +1,7 @@
 import { CollectionConfig } from 'payload'
 import { propertyField } from '@/fields/Property'
 import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
+import { hasTenantSelected } from '@/fields/utilities/access/hasTenantSelected'
 
 const Features: CollectionConfig = {
   admin: {
@@ -10,7 +11,7 @@ const Features: CollectionConfig = {
   slug: 'features',
   access: {
     create: isSuperAdmin,
-    read: isSuperAdmin,
+    read: (access) => Boolean(hasTenantSelected(access) && isSuperAdmin(access)),
     update: isSuperAdmin,
     delete: isSuperAdmin,
   },

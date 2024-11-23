@@ -6,6 +6,7 @@ import { updateAndDeleteAccess } from './access/updateAndDelete'
 import { externalUsersLogin } from './endpoints/externalUsersLogin'
 import { ensureUniqueUsername } from './hooks/ensureUniqueUsername'
 import { setCookieBasedOnDomain } from './hooks/setCookieBasedOnDomain'
+import { hasTenantSelected } from '@/fields/utilities/access/hasTenantSelected'
 
 const Users: CollectionConfig = {
   slug: 'users',
@@ -26,9 +27,11 @@ const Users: CollectionConfig = {
       name: 'roles',
       type: 'relationship',
       relationTo: 'roles',
-      filterOptions: () => ({ scope: { equals: 'global' } }),
       hasMany: true,
       required: true,
+      access: {
+        read: hasTenantSelected,
+      },
       admin: {
         disableListColumn: true,
       },
@@ -49,8 +52,7 @@ const Users: CollectionConfig = {
           label: 'User Roles',
           name: 'roles',
           type: 'relationship',
-          relationTo: 'roles',
-          filterOptions: () => ({ scope: { equals: 'tenant' } }),
+          relationTo: 'tenant-roles',
           hasMany: true,
           required: true,
         },

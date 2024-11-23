@@ -2,8 +2,8 @@ import { User } from 'payload-types'
 import { checkUserRoles } from './checkUserRoles'
 
 export const hasAdminRole = (userRoles: User['roles']): boolean =>
-  checkUserRoles(['admin'], userRoles, 'global')
+  checkUserRoles(['admin'], userRoles)
 export const hasSuperAdminRole = (userRoles: User['roles']): boolean =>
-  checkUserRoles(['superAdmin'], userRoles, 'global')
+  checkUserRoles(['superAdmin'], userRoles)
 export const hasTenantAdminRole = (userRoles: User['roles']): boolean =>
-  checkUserRoles(['admin'], userRoles, 'tenant')
+  checkUserRoles(['admin'], userRoles)

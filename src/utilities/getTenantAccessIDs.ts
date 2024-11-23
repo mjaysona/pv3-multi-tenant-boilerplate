@@ -22,7 +22,7 @@ export const getTenantAdminTenantAccessIDs = (user: null | User): string[] => {
 
   return (
     user?.tenants?.reduce((acc: string[], { roles, tenant }) => {
-      if (hasTenantAdminRole(roles) && tenant) {
+      if (tenant) {
         acc.push(typeof tenant === 'string' ? tenant : tenant.id)
       }
       return acc
