@@ -6,7 +6,6 @@ import { updateAndDeleteAccess } from './access/updateAndDelete'
 import { externalUsersLogin } from './endpoints/externalUsersLogin'
 import { ensureUniqueUsername } from './hooks/ensureUniqueUsername'
 import { setCookieBasedOnDomain } from './hooks/setCookieBasedOnDomain'
-import { readGlobalRole } from './access/ readGlobalRole'
 
 const Users: CollectionConfig = {
   slug: 'users',
@@ -30,8 +29,8 @@ const Users: CollectionConfig = {
       filterOptions: () => ({ scope: { equals: 'global' } }),
       hasMany: true,
       required: true,
-      access: {
-        read: readGlobalRole,
+      admin: {
+        disableListColumn: true,
       },
     },
     {
@@ -47,7 +46,7 @@ const Users: CollectionConfig = {
           saveToJWT: true,
         },
         {
-          label: 'Tenant Roles',
+          label: 'User Roles',
           name: 'roles',
           type: 'relationship',
           relationTo: 'roles',
@@ -67,6 +66,9 @@ const Users: CollectionConfig = {
       index: true,
       access: {
         read: () => false,
+      },
+      admin: {
+        disableListColumn: true,
       },
     },
   ],

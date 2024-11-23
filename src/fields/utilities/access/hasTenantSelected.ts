@@ -2,7 +2,7 @@ import type { FieldAccess } from 'payload'
 import { parseCookies } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 
-export const readGlobalRole: FieldAccess = (args) => {
+export const hasTenantSelected: FieldAccess = (args) => {
   const { req } = args
   if (!req?.user) {
     return false
