@@ -19,9 +19,18 @@ export const readAccess: Access = (args) => {
     // give them read access to only pages for that tenant
     if (superAdmin) {
       return {
-        'tenants.tenant': {
-          equals: selectedTenant,
-        },
+        and: [
+          {
+            'tenants.tenant': {
+              equals: selectedTenant,
+            },
+          },
+          {
+            'roles.value': {
+              equals: 'user',
+            },
+          },
+        ],
       }
     }
 
@@ -30,11 +39,21 @@ export const readAccess: Access = (args) => {
 
     // If NOT super admin,
     // give them access only if they have access to tenant ID set in cookie
+
     if (hasTenantAccess) {
       return {
-        'tenants.tenant': {
-          equals: selectedTenant,
-        },
+        and: [
+          {
+            'tenants.tenant': {
+              equals: selectedTenant,
+            },
+          },
+          {
+            'roles.value': {
+              equals: 'user',
+            },
+          },
+        ],
       }
     }
   }
