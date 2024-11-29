@@ -118,7 +118,7 @@ export interface User {
   tenants?:
     | {
         tenant: string | Tenant;
-        roles: (string | TenantRole)[];
+        roles?: (string | TenantRole)[] | null;
         id?: string | null;
       }[]
     | null;

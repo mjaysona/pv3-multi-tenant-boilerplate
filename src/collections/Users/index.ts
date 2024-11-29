@@ -7,13 +7,14 @@ import { externalUsersLogin } from './endpoints/externalUsersLogin'
 import { ensureUniqueUsername } from './hooks/ensureUniqueUsername'
 import { setCookieBasedOnDomain } from './hooks/setCookieBasedOnDomain'
 import { hasTenantSelected } from '@/fields/utilities/access/hasTenantSelected'
+import { hasDomainAccess } from '../utilities/access/hasDomainAccess'
 
 const Users: CollectionConfig = {
   slug: 'users',
   access: {
     create: createAccess,
     delete: updateAndDeleteAccess,
-    read: readAccess,
+    read: (access) => (hasDomainAccess(access) ? readAccess(access) : false),
     update: updateAndDeleteAccess,
   },
   admin: {
@@ -30,7 +31,7 @@ const Users: CollectionConfig = {
       hasMany: true,
       required: true,
       access: {
-        read: (access) => !hasTenantSelected(access),
+        read: ({ req }) => !hasTenantSelected(req),
       },
       admin: {
         disableListColumn: true,
@@ -59,7 +60,7 @@ const Users: CollectionConfig = {
             }
           },
           hasMany: true,
-          required: true,
+          // required: true,
         },
       ],
       saveToJWT: true,
@@ -85,7 +86,11 @@ const Users: CollectionConfig = {
 
   // Uncomment this if you want to enable tenant-based cookie handling by domain.
   hooks: {
-    afterLogin: [setCookieBasedOnDomain],
+    afterLogin: [
+      (args) => {
+        return setCookieBasedOnDomain(args)
+      },
+    ],
   },
 }
 

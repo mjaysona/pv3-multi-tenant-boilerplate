@@ -4,11 +4,10 @@ import { propertyField } from '@/fields/Property'
 import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
 import { tenantField } from '@/fields/TenantField'
 import { filterByTenantRead } from './access/byTenant'
-import { autofillTenant } from '@/fields/TenantField/hooks/autofillTenant'
 import { hasTenantSelected } from '@/fields/utilities/access/hasTenantSelected'
-import { getTenantAccessIDs } from '@/utilities/getTenantAccessIDs'
 import { getSelectedTenant } from '@/utilities/getSelectedTenant'
 import { camelCaseFormat } from '../utilities/camelCaseFormat'
+import { hasDomainAccess } from '../utilities/access/hasDomainAccess'
 
 const TenantRoles: CollectionConfig = {
   slug: 'tenant-roles',
@@ -18,7 +17,7 @@ const TenantRoles: CollectionConfig = {
   },
   access: {
     create: ({ req }) => isSuperAdmin(req),
-    read: filterByTenantRead,
+    read: (access) => (hasDomainAccess(access) ? filterByTenantRead(access) : false),
     delete: ({ req }) => isSuperAdmin(req),
     update: ({ req }) => isSuperAdmin(req),
   },

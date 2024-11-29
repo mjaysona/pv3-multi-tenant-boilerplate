@@ -5,6 +5,7 @@ import { canMutatePage, filterByTenantRead } from './access/byTenant'
 import { externalReadAccess } from './access/externalReadAccess'
 import { ensureUniqueSlug } from './hooks/ensureUniqueSlug'
 import { tenantField } from '@/fields/TenantField'
+import { hasDomainAccess } from '../utilities/access/hasDomainAccess'
 
 const Pages: CollectionConfig = {
   slug: 'pages',
@@ -20,7 +21,7 @@ const Pages: CollectionConfig = {
 
       // when viewing pages from outside the admin panel
       // you should be able to see your tenants and public tenants
-      return externalReadAccess(args)
+      return hasDomainAccess(args) && externalReadAccess(args)
     },
     update: canMutatePage,
   },
