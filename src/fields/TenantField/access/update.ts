@@ -1,8 +1,8 @@
-import type { FieldAccess } from 'payload'
+import type { FieldAccess, PayloadRequest } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { getTenantAccessIDs } from '@/utilities/getTenantAccessIDs'
 
-export const tenantFieldUpdate: FieldAccess = (args) => {
-  const tenantIDs = getTenantAccessIDs(args.req.user)
-  return Boolean(isSuperAdmin(args) || tenantIDs.length > 0)
+export const tenantFieldUpdate = (req: PayloadRequest) => {
+  const tenantIDs = getTenantAccessIDs(req.user)
+  return Boolean(isSuperAdmin(req) || tenantIDs.length > 0)
 }

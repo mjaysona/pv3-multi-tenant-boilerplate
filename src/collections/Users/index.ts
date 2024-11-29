@@ -53,6 +53,11 @@ const Users: CollectionConfig = {
           name: 'roles',
           type: 'relationship',
           relationTo: 'tenant-roles',
+          filterOptions: ({ siblingData }) => {
+            return {
+              id: { equals: 'test' },
+            }
+          },
           hasMany: true,
           required: true,
         },

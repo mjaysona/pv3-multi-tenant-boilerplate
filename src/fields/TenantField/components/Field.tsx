@@ -1,17 +1,22 @@
-import type { Payload } from 'payload'
+import type { Payload, TextFieldClientProps } from 'payload'
 
 import { cookies as getCookies, headers as getHeaders } from 'next/headers'
 import React from 'react'
 
 import { TenantFieldComponentClient } from './Field.client'
 
-export const TenantFieldComponent: React.FC<{
+type Props = {
   payload: Payload
-  readOnly: boolean
-}> = async (args) => {
+} & TextFieldClientProps
+
+export const TenantFieldComponent: React.FC<Props> = async (props) => {
   const cookies = await getCookies()
   const headers = await getHeaders()
-  const { user } = await args.payload.auth({ headers })
+  const { user } = await props.payload.auth({ headers })
+  const { path, readOnly } = props
+  const payloadTenant = cookies.get('payload-tenant')?.value || undefined
+
+  console.log('payloadTenant:', payloadTenant)
 
   if (
     user &&
@@ -19,10 +24,7 @@ export const TenantFieldComponent: React.FC<{
       user?.roles?.includes('super-admin'))
   ) {
     return (
-      <TenantFieldComponentClient
-        initialValue={cookies.get('payload-tenant')?.value || undefined}
-        readOnly={args.readOnly}
-      />
+      <TenantFieldComponentClient initialValue={payloadTenant} path={path} readOnly={readOnly} />
     )
   }
 

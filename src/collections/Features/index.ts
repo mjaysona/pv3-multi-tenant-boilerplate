@@ -10,10 +10,10 @@ const Features: CollectionConfig = {
   },
   slug: 'features',
   access: {
-    create: isSuperAdmin,
-    read: (access) => Boolean(!hasTenantSelected(access) && isSuperAdmin(access)),
-    update: isSuperAdmin,
-    delete: isSuperAdmin,
+    create: ({ req }) => isSuperAdmin(req),
+    read: ({ req }) => Boolean(!hasTenantSelected(req) && isSuperAdmin(req)),
+    update: ({ req }) => isSuperAdmin(req),
+    delete: ({ req }) => isSuperAdmin(req),
   },
   fields: [
     {

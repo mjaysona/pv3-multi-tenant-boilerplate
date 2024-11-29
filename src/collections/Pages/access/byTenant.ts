@@ -1,13 +1,12 @@
-import type { Access } from 'payload'
-import { parseCookies } from 'payload'
+import type { Access, AccessArgs, Where } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { getTenantAccessIDs } from '@/utilities/getTenantAccessIDs'
+import { getSelectedTenant } from '@/utilities/getSelectedTenant'
 
 export const filterByTenantRead: Access = (args) => {
   const req = args.req
-  const cookies = parseCookies(req.headers)
-  const superAdmin = isSuperAdmin(args)
-  const selectedTenant = cookies.get('payload-tenant')
+  const superAdmin = isSuperAdmin(req)
+  const selectedTenant = getSelectedTenant(req)
   const tenantHost = req.headers.get('host')
   const tenantAccessIDs = getTenantAccessIDs(req.user)
 
@@ -77,7 +76,7 @@ export const filterByTenantRead: Access = (args) => {
 
 export const canMutatePage: Access = (args) => {
   const req = args.req
-  const superAdmin = isSuperAdmin(args)
+  const superAdmin = isSuperAdmin(req)
 
   if (!req.user) {
     return false
@@ -88,8 +87,7 @@ export const canMutatePage: Access = (args) => {
     return true
   }
 
-  const cookies = parseCookies(req.headers)
-  const selectedTenant = cookies.get('payload-tenant')
+  const selectedTenant = getSelectedTenant(req)
 
   // tenant admins can add/delete/update
   // pages they have access to

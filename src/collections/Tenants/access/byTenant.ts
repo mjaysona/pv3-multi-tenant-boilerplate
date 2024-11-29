@@ -6,7 +6,7 @@ export const filterByTenantRead: Access = (args) => {
   const req = args.req
 
   // Super admin can read all
-  if (isSuperAdmin(args)) {
+  if (isSuperAdmin(req)) {
     return true
   }
 
@@ -39,7 +39,7 @@ export const filterByTenantRead: Access = (args) => {
 
 export const canMutateTenant: Access = (args) => {
   const req = args.req
-  const superAdmin = isSuperAdmin(args)
+  const superAdmin = isSuperAdmin(req)
 
   if (!req.user) {
     return false

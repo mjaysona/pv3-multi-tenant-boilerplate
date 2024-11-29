@@ -1,7 +1,7 @@
 import type { Access, Where } from 'payload'
-import { parseCookies } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { getTenantAdminTenantAccessIDs } from '@/utilities/getTenantAccessIDs'
+import { getSelectedTenant } from '@/utilities/getSelectedTenant'
 
 // add FieldAccess type
 export const readAccess: Access = (args) => {
@@ -10,9 +10,8 @@ export const readAccess: Access = (args) => {
     return false
   }
 
-  const cookies = parseCookies(req.headers)
-  const superAdmin = isSuperAdmin(args)
-  const selectedTenant = cookies.get('payload-tenant')
+  const superAdmin = isSuperAdmin(req)
+  const selectedTenant = getSelectedTenant(req)
 
   if (selectedTenant) {
     // If it's a super admin,

@@ -6,7 +6,7 @@ import { hasSuperAdminRole } from '@/utilities/getRole'
 const Tenants: CollectionConfig = {
   slug: 'tenants',
   access: {
-    create: isSuperAdmin,
+    create: ({ req }) => isSuperAdmin(req),
     delete: canMutateTenant,
     read: filterByTenantRead,
     update: canMutateTenant,

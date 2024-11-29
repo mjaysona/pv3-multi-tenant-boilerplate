@@ -1,7 +1,7 @@
 import { hasSuperAdminRole } from '@/utilities/getRole'
-import type { Access } from 'payload'
+import type { PayloadRequest } from 'payload'
 
-export const isSuperAdmin: Access = ({ req }) => {
+export const isSuperAdmin = (req: PayloadRequest) => {
   if (!req?.user) {
     return false
   }

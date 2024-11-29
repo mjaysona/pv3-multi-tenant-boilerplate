@@ -1,13 +1,13 @@
 import type { Access, Where } from 'payload'
-import { parseCookies } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { getTenantAccessIDs } from '@/utilities/getTenantAccessIDs'
+import { getSelectedTenant } from '@/utilities/getSelectedTenant'
 
 export const externalReadAccess: Access = (args) => {
   const req = args.req
-  const cookies = parseCookies(req.headers)
-  const superAdmin = isSuperAdmin(args)
-  const selectedTenant = cookies.get('payload-tenant')
+  const superAdmin = isSuperAdmin(req)
+  const selectedTenant = getSelectedTenant(req)
+  const tenantHost = req.headers.get('host')
   const tenantAccessIDs = getTenantAccessIDs(req.user)
 
   const publicPageConstraint: Where = {
@@ -22,11 +22,16 @@ export const externalReadAccess: Access = (args) => {
     // give them read access to only pages for that tenant
     if (superAdmin) {
       return {
-        or: [
+        and: [
           publicPageConstraint,
           {
             tenant: {
               equals: selectedTenant,
+            },
+          },
+          {
+            'tenant.domains.domain': {
+              equals: tenantHost,
             },
           },
         ],
@@ -39,11 +44,16 @@ export const externalReadAccess: Access = (args) => {
     // give them access only if they have access to tenant ID set in cookie
     if (hasTenantAccess) {
       return {
-        or: [
+        and: [
           publicPageConstraint,
           {
             tenant: {
               equals: selectedTenant,
+            },
+          },
+          {
+            'tenant.domains.domain': {
+              equals: tenantHost,
             },
           },
         ],

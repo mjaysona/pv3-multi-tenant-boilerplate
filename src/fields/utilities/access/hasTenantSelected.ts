@@ -1,16 +1,14 @@
-import type { FieldAccess } from 'payload'
-import { parseCookies } from 'payload'
+import type { PayloadRequest } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
+import { getSelectedTenant } from '@/utilities/getSelectedTenant'
 
-export const hasTenantSelected: FieldAccess = (args) => {
-  const { req } = args
+export const hasTenantSelected = (req: PayloadRequest) => {
   if (!req?.user) {
     return false
   }
 
-  const cookies = parseCookies(req.headers)
-  const superAdmin = isSuperAdmin(args)
-  const selectedTenant = cookies.get('payload-tenant')
+  const superAdmin = isSuperAdmin(req)
+  const selectedTenant = getSelectedTenant(req)
 
   if (superAdmin && selectedTenant) {
     return true
