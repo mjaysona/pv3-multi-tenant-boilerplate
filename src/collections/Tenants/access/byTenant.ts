@@ -1,16 +1,24 @@
 import type { Access } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { getTenantAccessIDs } from '@/utilities/getTenantAccessIDs'
+import { isAccessingViaSubdomain } from '@/collections/utilities/access/isAccessingViaSubdomain'
 
 export const filterByTenantRead: Access = (args) => {
   const req = args.req
+  const tenantIDs = getTenantAccessIDs(req.user)
 
   // Super admin can read all
   if (isSuperAdmin(req)) {
-    return true
-  }
+    if (!isAccessingViaSubdomain(req)) {
+      return true
+    }
 
-  const tenantIDs = getTenantAccessIDs(req.user)
+    return {
+      'domains.domain': {
+        equals: req.headers.get('host'),
+      },
+    }
+  }
 
   // Allow public tenants to be read by anyone
   const publicConstraint = {

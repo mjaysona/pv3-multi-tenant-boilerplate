@@ -4,13 +4,14 @@ import { mergeHeaders } from '@payloadcms/next/utilities'
 import { generateCookie, getCookieExpiration } from 'payload'
 
 export const setCookieBasedOnDomain: CollectionAfterLoginHook = async ({ req, user }) => {
+  const host = req.headers.get('host')
   const relatedOrg = await req.payload.find({
     collection: 'tenants',
     depth: 0,
     limit: 1,
     where: {
       'domains.domain': {
-        in: [req.headers.get('host')],
+        in: [host],
       },
     },
   })

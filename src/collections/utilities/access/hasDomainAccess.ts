@@ -16,12 +16,5 @@ export const hasDomainAccess: Access = (args) => {
   const selectedTenantDomains =
     typeof selectedTenant?.tenant !== 'string' ? selectedTenant?.tenant.domains : []
 
-  console.log('tenantHost', tenantHost)
-  console.log('selectedTenantDomains', selectedTenantDomains)
-  console.log(
-    'hasDomainAccess',
-    selectedTenantDomains?.some((td) => td.domain === tenantHost),
-  )
-
   return Boolean(selectedTenantDomains?.some((td) => td.domain === tenantHost))
 }

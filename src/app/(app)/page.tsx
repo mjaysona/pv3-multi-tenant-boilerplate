@@ -3,10 +3,10 @@ import { Background } from '@/components/Background'
 import Link from 'next/link'
 import React from 'react'
 import config from '@payload-config'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 
 const Page = async () => {
-  const payload = await getPayloadHMR({
+  const payload = await getPayload({
     config,
   })
 
@@ -39,9 +39,9 @@ const Page = async () => {
         <div className="codeBlock">
           <pre>
             <code>
-              {`import { getPayloadHMR } from '@payloadcms/next/utilities'
+              {`import { getPayload } from 'payload'
 import config from '@payload-config'
-const payload = await getPayloadHMR({ config })
+const payload = await getPayload({ config })
 const data = await payload.find({
   collection: 'pages',
 })

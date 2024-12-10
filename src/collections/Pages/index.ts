@@ -13,6 +13,8 @@ const Pages: CollectionConfig = {
     create: canMutatePage,
     delete: canMutatePage,
     read: (args) => {
+      if (!hasDomainAccess(args)) return false
+
       // when viewing pages inside the admin panel
       // restrict access to the ones your user has access to
       if (isPayloadAdminPanel(args.req)) {
@@ -21,7 +23,7 @@ const Pages: CollectionConfig = {
 
       // when viewing pages from outside the admin panel
       // you should be able to see your tenants and public tenants
-      return hasDomainAccess(args) && externalReadAccess(args)
+      return externalReadAccess(args)
     },
     update: canMutatePage,
   },
