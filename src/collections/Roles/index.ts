@@ -3,7 +3,6 @@ import { noSpecialCharacters } from '../utilities/noSpecialCharacters'
 import { propertyField } from '@/fields/Property'
 import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
 import { hasSuperAdminRole } from '@/utilities/getRole'
-import { isTenantAdmin } from '../utilities/access/isTenantAdmin'
 
 const Roles: CollectionConfig = {
   slug: 'roles',

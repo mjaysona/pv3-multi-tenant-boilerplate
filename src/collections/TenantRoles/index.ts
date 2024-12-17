@@ -7,7 +7,6 @@ import { filterByTenantRead } from './access/byTenant'
 import { hasTenantSelected } from '@/fields/utilities/access/hasTenantSelected'
 import { getSelectedTenantId } from '@/utilities/getSelectedTenant'
 import { camelCaseFormat } from '../utilities/camelCaseFormat'
-import { hasSuperAdminRole } from '@/utilities/getRole'
 import { isTenantAdmin } from '../utilities/access/isTenantAdmin'
 
 const TenantRoles: CollectionConfig = {

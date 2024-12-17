@@ -1,10 +1,10 @@
 import { type GlobalConfig, type User } from 'payload'
-import { cookies as getCookies } from 'next/headers'
 
 import TenantMainMenu from '@/collections/MainMenu'
 import { getSelectedTenantId, getSelectedTenantToken } from '@/utilities/getSelectedTenant'
-import { hasTenantSelected } from '@/fields/utilities/access/hasTenantSelected'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
+import { hasTenantAdminRole } from '@/utilities/getRole'
+import { headers as getHeaders } from 'next/headers'
 
 const MainMenu: GlobalConfig = {
   ...(TenantMainMenu as GlobalConfig),
@@ -14,7 +14,40 @@ const MainMenu: GlobalConfig = {
   },
   slug: 'main-menu',
   access: {
-    update: ({ req }) => Boolean(hasTenantSelected(req) && isSuperAdmin(req)),
+    read: async ({ req }) => {
+      const selectedTenantToken = await getSelectedTenantToken()
+      const headers = await getHeaders()
+      const tenants = req.user?.tenants || []
+      const selectedTenant = tenants.find(
+        ({ tenant }) => typeof tenant !== 'string' && tenant.id === selectedTenantToken,
+      )
+      const host = headers.get('host')
+      const subdomain = host?.split('.')[0]
+
+      const isAccessingViaSubdomain =
+        subdomain && subdomain !== 'www' && !subdomain.startsWith('localhost')
+
+      return Boolean(
+        isSuperAdmin(req) || (hasTenantAdminRole(selectedTenant?.roles) && isAccessingViaSubdomain),
+      )
+    },
+    update: async ({ req }) => {
+      const selectedTenantToken = await getSelectedTenantToken()
+      const headers = await getHeaders()
+      const tenants = req.user?.tenants || []
+      const selectedTenant = tenants.find(
+        ({ tenant }) => typeof tenant !== 'string' && tenant.id === selectedTenantToken,
+      )
+      const host = headers.get('host')
+      const subdomain = host?.split('.')[0]
+
+      const isAccessingViaSubdomain =
+        subdomain && subdomain !== 'www' && !subdomain.startsWith('localhost')
+
+      return Boolean(
+        isSuperAdmin(req) || (hasTenantAdminRole(selectedTenant?.roles) && isAccessingViaSubdomain),
+      )
+    },
   },
   admin: {
     hideAPIURL: true,
@@ -64,13 +97,12 @@ const MainMenu: GlobalConfig = {
     ],
     beforeRead: [
       async ({ req }) => {
-        const cookies = await getCookies()
-        const selectedTenantId = cookies.get('payload-tenant')?.value
+        const selectedTenantToken = await getSelectedTenantToken()
         const tenantMainMenus = await req.payload.find({
           collection: 'tenant-main-menu',
           where: {
             tenant: {
-              equals: selectedTenantId,
+              equals: selectedTenantToken,
             },
           },
         })

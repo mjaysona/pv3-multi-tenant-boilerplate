@@ -25,7 +25,5 @@ export const getSelectedTenantToken = async () => {
   const cookies = await getCookies()
   const selectedTenantToken = cookies.get('payload-tenant')?.value
 
-  console.log('selectedTenantToken', selectedTenantToken)
-
   return selectedTenantToken
 }

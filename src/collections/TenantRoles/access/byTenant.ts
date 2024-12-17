@@ -60,9 +60,18 @@ export const filterByTenantRead: Access = (args) => {
   // give access to only their own tenants
   if (tenantAccessIDs.length) {
     return {
-      tenant: {
-        in: tenantAccessIDs,
-      },
+      and: [
+        {
+          tenant: {
+            in: tenantAccessIDs,
+          },
+        },
+        {
+          'tenant.domains.domain': {
+            equals: tenantHost,
+          },
+        },
+      ],
     }
   }
 
