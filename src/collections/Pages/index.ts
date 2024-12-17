@@ -1,20 +1,19 @@
 import type { CollectionConfig } from 'payload'
-
 import { isPayloadAdminPanel } from '../../utilities/isPayloadAdminPanel'
-import { canMutatePage, filterByTenantRead } from './access/byTenant'
+import { filterByTenantRead } from './access/byTenant'
 import { externalReadAccess } from './access/externalReadAccess'
 import { ensureUniqueSlug } from './hooks/ensureUniqueSlug'
 import { tenantField } from '@/fields/TenantField'
-import { hasDomainAccess } from '../utilities/access/hasDomainAccess'
+import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
+import { isTenantAdmin } from '../utilities/access/isTenantAdmin'
+import richText from '@/fields/RichText'
+import { formatSlug } from './hooks/formatSlug'
 
 const Pages: CollectionConfig = {
   slug: 'pages',
   access: {
-    create: canMutatePage,
-    delete: canMutatePage,
+    create: ({ req }) => Boolean(isSuperAdmin(req) || isTenantAdmin(req)),
     read: (args) => {
-      if (!hasDomainAccess(args)) return false
-
       // when viewing pages inside the admin panel
       // restrict access to the ones your user has access to
       if (isPayloadAdminPanel(args.req)) {
@@ -25,7 +24,8 @@ const Pages: CollectionConfig = {
       // you should be able to see your tenants and public tenants
       return externalReadAccess(args)
     },
-    update: canMutatePage,
+    update: ({ req }) => Boolean(isSuperAdmin(req) || isTenantAdmin(req)),
+    delete: ({ req }) => Boolean(isSuperAdmin(req) || isTenantAdmin(req)),
   },
   admin: {
     useAsTitle: 'title',
@@ -34,16 +34,21 @@ const Pages: CollectionConfig = {
     {
       name: 'title',
       type: 'text',
+      required: true,
     },
     {
       name: 'slug',
       type: 'text',
-      defaultValue: 'home',
+      required: true,
+      admin: {
+        position: 'sidebar',
+      },
       hooks: {
         beforeValidate: [ensureUniqueSlug],
       },
       index: true,
     },
+    richText(),
     tenantField,
   ],
 }

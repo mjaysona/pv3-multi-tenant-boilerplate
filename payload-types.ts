@@ -17,6 +17,7 @@ export interface Config {
     users: User;
     pages: Page;
     media: Media;
+    'tenant-main-menu': TenantMainMenu;
     features: Feature;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -30,6 +31,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'tenant-main-menu': TenantMainMenuSelect<false> | TenantMainMenuSelect<true>;
     features: FeaturesSelect<false> | FeaturesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -38,8 +40,12 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'main-menu': MainMenu;
+  };
+  globalsSelect: {
+    'main-menu': MainMenuSelect<false> | MainMenuSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -114,14 +120,12 @@ export interface Role {
  */
 export interface User {
   id: string;
-  roles: (string | Role)[];
-  tenants?:
-    | {
-        tenant: string | Tenant;
-        roles?: (string | TenantRole)[] | null;
-        id?: string | null;
-      }[]
-    | null;
+  roles?: (string | Role)[] | null;
+  tenants: {
+    tenant: string | Tenant;
+    roles?: (string | TenantRole)[] | null;
+    id?: string | null;
+  }[];
   username?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -140,8 +144,11 @@ export interface User {
  */
 export interface Page {
   id: string;
-  title?: string | null;
-  slug?: string | null;
+  title: string;
+  slug: string;
+  richText: {
+    [k: string]: unknown;
+  }[];
   tenant?: (string | null) | Tenant;
   updatedAt: string;
   createdAt: string;
@@ -164,6 +171,28 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tenant-main-menu".
+ */
+export interface TenantMainMenu {
+  id: string;
+  navItems?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?: (string | null) | Page;
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  tenant?: (string | null) | Tenant;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -208,6 +237,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'tenant-main-menu';
+        value: string | TenantMainMenu;
       } | null)
     | ({
         relationTo: 'features';
@@ -324,6 +357,7 @@ export interface UsersSelect<T extends boolean = true> {
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  richText?: T;
   tenant?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -345,6 +379,29 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tenant-main-menu_select".
+ */
+export interface TenantMainMenuSelect<T extends boolean = true> {
+  navItems?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  tenant?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -389,6 +446,52 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "main-menu".
+ */
+export interface MainMenu {
+  id: string;
+  navItems?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?: (string | null) | Page;
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  tenant?: (string | null) | Tenant;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "main-menu_select".
+ */
+export interface MainMenuSelect<T extends boolean = true> {
+  navItems?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  tenant?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

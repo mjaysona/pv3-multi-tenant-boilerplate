@@ -1,5 +1,4 @@
 import { User } from 'payload-types'
-import { hasTenantAdminRole } from './getRole'
 
 export const getTenantAccessIDs = (user: null | User): string[] => {
   if (!user) {

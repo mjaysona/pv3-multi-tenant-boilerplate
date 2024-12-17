@@ -1,21 +1,20 @@
 import type { CollectionConfig } from 'payload'
 
-import { createAccess } from './access/create'
 import { readAccess } from './access/read'
-import { updateAndDeleteAccess } from './access/updateAndDelete'
 import { externalUsersLogin } from './endpoints/externalUsersLogin'
 import { ensureUniqueUsername } from './hooks/ensureUniqueUsername'
 import { setCookieBasedOnDomain } from './hooks/setCookieBasedOnDomain'
-import { hasTenantSelected } from '@/fields/utilities/access/hasTenantSelected'
-import { hasDomainAccess } from '../utilities/access/hasDomainAccess'
+import { hasSuperAdminRole } from '@/utilities/getRole'
+import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
+import { createAccess } from './access/create'
 
 const Users: CollectionConfig = {
   slug: 'users',
   access: {
     create: createAccess,
-    delete: updateAndDeleteAccess,
-    read: (access) => (hasDomainAccess(access) ? readAccess(access) : false),
-    update: updateAndDeleteAccess,
+    delete: ({ req }) => isSuperAdmin(req),
+    read: (access) => readAccess(access),
+    update: ({ req }) => isSuperAdmin(req),
   },
   admin: {
     useAsTitle: 'email',
@@ -30,16 +29,15 @@ const Users: CollectionConfig = {
       relationTo: 'roles',
       hasMany: true,
       required: true,
-      access: {
-        read: ({ req }) => !hasTenantSelected(req),
-      },
       admin: {
+        condition: (_data, _siblingData, { user }) => Boolean(hasSuperAdminRole(user?.roles)),
         disableListColumn: true,
       },
     },
     {
       name: 'tenants',
       type: 'array',
+      required: true,
       fields: [
         {
           name: 'tenant',
@@ -54,13 +52,18 @@ const Users: CollectionConfig = {
           name: 'roles',
           type: 'relationship',
           relationTo: 'tenant-roles',
+          hasMany: true,
+          required: true,
           filterOptions: ({ siblingData }) => {
             return {
-              id: { equals: 'test' },
+              'tenant.id': { equals: siblingData?.tenant },
             }
           },
-          hasMany: true,
-          // required: true,
+          admin: {
+            condition: (_data, siblingData) => {
+              return Boolean(siblingData.tenant)
+            },
+          },
         },
       ],
       saveToJWT: true,

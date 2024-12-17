@@ -11,26 +11,26 @@ export const propertyField: Field = {
   required: true,
   access: {
     read: ({ req }) => {
-      if (hasTenantSelected(req)) {
-        return false
-      }
       if (isSuperAdmin(req)) {
         return true
+      }
+      if (hasTenantSelected(req)) {
+        return false
       }
       return tenantFieldUpdate(req)
     },
     update: ({ req }) => {
-      if (hasTenantSelected(req)) {
-        return false
-      }
       if (isSuperAdmin(req)) {
         return true
+      }
+      if (hasTenantSelected(req)) {
+        return false
       }
       return tenantFieldUpdate(req)
     },
   },
   admin: {
-    condition: ({ user }) => Boolean(hasSuperAdminRole(user?.roles)),
+    condition: (_data, _siblingData, { user }) => Boolean(hasSuperAdminRole(user?.roles)),
     readOnly: true,
   },
   hooks: {

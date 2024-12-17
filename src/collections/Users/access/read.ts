@@ -1,7 +1,8 @@
 import type { Access, Where } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { getTenantAdminTenantAccessIDs } from '@/utilities/getTenantAccessIDs'
-import { getSelectedTenant } from '@/utilities/getSelectedTenant'
+import { getSelectedTenantId } from '@/utilities/getSelectedTenant'
+import { isAccessingViaSubdomain } from '@/collections/utilities/access/isAccessingViaSubdomain'
 
 // add FieldAccess type
 export const readAccess: Access = (args) => {
@@ -11,7 +12,7 @@ export const readAccess: Access = (args) => {
   }
 
   const superAdmin = isSuperAdmin(req)
-  const selectedTenant = getSelectedTenant(req)
+  const selectedTenant = getSelectedTenantId(req)
 
   if (selectedTenant) {
     // If it's a super admin,
@@ -40,20 +41,24 @@ export const readAccess: Access = (args) => {
     // give them access only if they have access to tenant ID set in cookie
 
     if (hasTenantAccess) {
-      return {
-        and: [
-          {
-            'tenants.tenant': {
-              equals: selectedTenant,
+      if (isAccessingViaSubdomain(req)) {
+        return {
+          and: [
+            {
+              'tenants.tenant': {
+                equals: selectedTenant,
+              },
             },
-          },
-          {
-            'roles.value': {
-              equals: 'user',
+            {
+              'roles.value': {
+                equals: 'user',
+              },
             },
-          },
-        ],
+          ],
+        }
       }
+
+      return false
     }
   }
 

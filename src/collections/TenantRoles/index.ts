@@ -5,9 +5,10 @@ import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
 import { tenantField } from '@/fields/TenantField'
 import { filterByTenantRead } from './access/byTenant'
 import { hasTenantSelected } from '@/fields/utilities/access/hasTenantSelected'
-import { getSelectedTenant } from '@/utilities/getSelectedTenant'
+import { getSelectedTenantId } from '@/utilities/getSelectedTenant'
 import { camelCaseFormat } from '../utilities/camelCaseFormat'
-import { hasDomainAccess } from '../utilities/access/hasDomainAccess'
+import { hasSuperAdminRole } from '@/utilities/getRole'
+import { isTenantAdmin } from '../utilities/access/isTenantAdmin'
 
 const TenantRoles: CollectionConfig = {
   slug: 'tenant-roles',
@@ -16,8 +17,8 @@ const TenantRoles: CollectionConfig = {
     plural: 'User Roles',
   },
   access: {
-    create: ({ req }) => isSuperAdmin(req),
-    read: (access) => (hasDomainAccess(access) ? filterByTenantRead(access) : false),
+    create: ({ req }) => Boolean(isSuperAdmin(req) || isTenantAdmin(req)),
+    read: (access) => filterByTenantRead(access),
     delete: ({ req }) => isSuperAdmin(req),
     update: ({ req }) => isSuperAdmin(req),
   },
@@ -44,7 +45,7 @@ const TenantRoles: CollectionConfig = {
           return {
             ...data,
             value: camelCaseFormat(data?.label),
-            tenant: getSelectedTenant(req),
+            tenant: getSelectedTenantId(req),
           }
         }
 

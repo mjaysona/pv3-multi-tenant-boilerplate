@@ -1,6 +1,6 @@
 import type { Access } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
-import { getSelectedTenant } from '@/utilities/getSelectedTenant'
+import { getSelectedTenantId } from '@/utilities/getSelectedTenantId'
 
 export const hasDomainAccess: Access = (args) => {
   const req = args.req
@@ -11,7 +11,7 @@ export const hasDomainAccess: Access = (args) => {
   const tenantHost = req.headers.get('host')
 
   const selectedTenant = user?.tenants?.find(
-    (tenant) => typeof tenant.tenant !== 'string' && tenant.tenant.id === getSelectedTenant(req),
+    (tenant) => typeof tenant.tenant !== 'string' && tenant.tenant.id === getSelectedTenantId(req),
   )
   const selectedTenantDomains =
     typeof selectedTenant?.tenant !== 'string' ? selectedTenant?.tenant.domains : []

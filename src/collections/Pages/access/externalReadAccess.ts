@@ -1,12 +1,13 @@
 import type { Access, Where } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { getTenantAccessIDs } from '@/utilities/getTenantAccessIDs'
-import { getSelectedTenant } from '@/utilities/getSelectedTenant'
+import { getSelectedTenantId } from '@/utilities/getSelectedTenant'
+import { isAccessingViaSubdomain } from '@/collections/utilities/access/isAccessingViaSubdomain'
 
 export const externalReadAccess: Access = (args) => {
   const req = args.req
   const superAdmin = isSuperAdmin(req)
-  const selectedTenant = getSelectedTenant(req)
+  const selectedTenant = getSelectedTenantId(req)
   const tenantHost = req.headers.get('host')
   const tenantAccessIDs = getTenantAccessIDs(req.user)
 
@@ -23,7 +24,7 @@ export const externalReadAccess: Access = (args) => {
     if (superAdmin) {
       return {
         and: [
-          publicPageConstraint,
+          // publicPageConstraint,
           {
             tenant: {
               equals: selectedTenant,
@@ -43,21 +44,24 @@ export const externalReadAccess: Access = (args) => {
     // If NOT super admin,
     // give them access only if they have access to tenant ID set in cookie
     if (hasTenantAccess) {
-      return {
-        and: [
-          publicPageConstraint,
-          {
-            tenant: {
-              equals: selectedTenant,
+      if (isAccessingViaSubdomain(req)) {
+        return {
+          and: [
+            {
+              tenant: {
+                equals: selectedTenant,
+              },
             },
-          },
-          {
-            'tenant.domains.domain': {
-              equals: tenantHost,
+            {
+              'tenant.domains.domain': {
+                equals: tenantHost,
+              },
             },
-          },
-        ],
+          ],
+        }
       }
+
+      return false
     }
   }
 
@@ -84,5 +88,5 @@ export const externalReadAccess: Access = (args) => {
   }
 
   // Allow access to public pages
-  return publicPageConstraint
+  // return publicPageConstraint
 }

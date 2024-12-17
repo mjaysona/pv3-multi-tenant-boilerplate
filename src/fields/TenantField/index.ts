@@ -11,9 +11,6 @@ export const tenantField: Field = {
   required: true,
   access: {
     read: ({ req }) => {
-      if (hasTenantSelected(req)) {
-        return false
-      }
       if (isSuperAdmin(req)) {
         return true
       }
@@ -33,17 +30,10 @@ export const tenantField: Field = {
     components: {
       Field: '@/fields/TenantField/components/Field#TenantFieldComponent',
     },
-    condition: ({ user }) => Boolean(hasSuperAdminRole(user?.roles)),
+    condition: (_data, _siblingData, { user }) => {
+      return Boolean(hasSuperAdminRole(user?.roles))
+    },
     position: 'sidebar',
-  },
-  filterOptions: ({ siblingData, user }) => {
-    if (!hasSuperAdminRole(user?.roles)) {
-      return {
-        id: { equals: siblingData?.tenant },
-      }
-    }
-
-    return true
   },
   hasMany: false,
   hooks: {

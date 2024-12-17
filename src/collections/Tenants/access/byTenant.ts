@@ -14,9 +14,13 @@ export const filterByTenantRead: Access = (args) => {
     }
 
     return {
-      'domains.domain': {
-        equals: req.headers.get('host'),
-      },
+      and: [
+        {
+          'domains.domain': {
+            equals: req.headers.get('host'),
+          },
+        },
+      ],
     }
   }
 

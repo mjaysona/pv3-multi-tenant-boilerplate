@@ -1,6 +1,6 @@
 import type { PayloadRequest } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
-import { getSelectedTenant } from '@/utilities/getSelectedTenant'
+import { getSelectedTenantId } from '@/utilities/getSelectedTenant'
 
 export const hasTenantSelected = (req: PayloadRequest) => {
   if (!req?.user) {
@@ -8,7 +8,7 @@ export const hasTenantSelected = (req: PayloadRequest) => {
   }
 
   const superAdmin = isSuperAdmin(req)
-  const selectedTenant = getSelectedTenant(req)
+  const selectedTenant = getSelectedTenantId(req)
 
   if (superAdmin && selectedTenant) {
     return true

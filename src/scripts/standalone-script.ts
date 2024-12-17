@@ -13,7 +13,6 @@ async function run() {
     collection: 'pages',
   })
 
-  console.log(pages)
   process.exit(0)
 }
 

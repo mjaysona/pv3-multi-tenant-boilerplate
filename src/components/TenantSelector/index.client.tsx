@@ -15,7 +15,9 @@ export const TenantSelector = ({ initialCookie }: { initialCookie?: string }) =>
   const { user } = useAuth<User>()
   const [options, setOptions] = React.useState<OptionObject[]>([])
 
-  const isSuperAdmin = user?.roles?.includes('super-admin')
+  const isSuperAdmin = user?.roles?.some(
+    (role) => typeof role !== 'string' && role.value === 'Super Admin',
+  )
   const tenantIDs =
     user?.tenants?.map(({ tenant }) => {
       if (tenant) {

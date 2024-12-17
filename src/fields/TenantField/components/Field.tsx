@@ -16,8 +16,6 @@ export const TenantFieldComponent: React.FC<Props> = async (props) => {
   const { path, readOnly } = props
   const payloadTenant = cookies.get('payload-tenant')?.value || undefined
 
-  console.log('payloadTenant:', payloadTenant)
-
   if (
     user &&
     ((Array.isArray(user.tenants) && user.tenants.length > 1) ||
