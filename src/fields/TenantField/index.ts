@@ -4,6 +4,7 @@ import { autofillTenant } from './hooks/autofillTenant'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { hasTenantSelected } from '../utilities/access/hasTenantSelected'
 import { hasSuperAdminRole } from '@/utilities/getRole'
+import { cookies as getCookies } from 'next/headers'
 
 export const tenantField: Field = {
   name: 'tenant',
@@ -25,6 +26,18 @@ export const tenantField: Field = {
       }
       return tenantFieldUpdate(req)
     },
+  },
+  filterOptions: async () => {
+    const cookies = await getCookies()
+    const selectedTenantId = cookies.get('payload-tenant')?.value
+
+    if (Boolean(selectedTenantId)) {
+      return {
+        id: { equals: selectedTenantId },
+      }
+    }
+
+    return true
   },
   admin: {
     components: {

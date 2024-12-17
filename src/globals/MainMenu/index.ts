@@ -16,6 +16,9 @@ const MainMenu: GlobalConfig = {
   access: {
     update: ({ req }) => Boolean(hasTenantSelected(req) && isSuperAdmin(req)),
   },
+  admin: {
+    hideAPIURL: true,
+  },
   hooks: {
     beforeChange: [
       async ({ data, req }) => {

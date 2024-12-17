@@ -39,12 +39,11 @@ const Pages: CollectionConfig = {
     {
       name: 'slug',
       type: 'text',
-      required: true,
       admin: {
         position: 'sidebar',
       },
       hooks: {
-        beforeValidate: [ensureUniqueSlug],
+        beforeValidate: [formatSlug('title'), ensureUniqueSlug],
       },
       index: true,
     },

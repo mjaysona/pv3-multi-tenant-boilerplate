@@ -145,7 +145,7 @@ export interface User {
 export interface Page {
   id: string;
   title: string;
-  slug: string;
+  slug?: string | null;
   richText: {
     [k: string]: unknown;
   }[];

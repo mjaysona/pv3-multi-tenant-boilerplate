@@ -1,7 +1,4 @@
-import type { FieldHook } from 'payload'
-
-import { ValidationError } from 'payload'
-
+import { FieldHook, ValidationError } from 'payload'
 import { getTenantAccessIDs } from '../../../utilities/getTenantAccessIDs'
 
 export const ensureUniqueSlug: FieldHook = async ({ data, originalDoc, req, value }) => {
