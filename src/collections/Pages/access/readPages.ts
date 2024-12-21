@@ -1,12 +1,13 @@
 import type { Access, Where } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { getSelectedTenantId, getSelectedTenantToken } from '@/utilities/getSelectedTenant'
+import { headers as getHeaders } from 'next/headers'
 import { isAccessingViaSubdomain } from '@/collections/utilities/access/isAccessingViaSubdomain'
-import { isTenantAdmin } from '@/collections/utilities/access/isTenantAdmin'
 
-export const readUsers: Access = async (args) => {
+export const readPages: Access = async (args) => {
   const req = args.req
   const selectedTenant = getSelectedTenantId(req) || (await getSelectedTenantToken())
+  const tenantHost = req.headers.get('host') || (await getHeaders()).get('host')
   const superAdmin = isSuperAdmin(req)
 
   if (selectedTenant) {
@@ -14,37 +15,25 @@ export const readUsers: Access = async (args) => {
 
     if (isSuperAdmin(req)) {
       return {
-        and: [
-          {
-            'tenants.tenant': {
-              equals: selectedTenant,
-            },
-          },
-        ],
-      } as Where
-    }
-
-    if (await isTenantAdmin(req)) {
-      return {
-        and: [
-          {
-            'tenants.tenant': {
-              equals: selectedTenant,
-            },
-          },
-          {
-            'roles.value': {
-              equals: 'user',
-            },
-          },
-        ],
+        tenant: {
+          equals: selectedTenant,
+        },
       } as Where
     }
 
     return {
-      id: {
-        equals: req?.user?.id,
-      },
+      and: [
+        {
+          tenant: {
+            equals: selectedTenant,
+          },
+        },
+        {
+          'tenant.domains.domain': {
+            equals: tenantHost,
+          },
+        },
+      ],
     } as Where
   }
 

@@ -3,7 +3,6 @@ import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { getSelectedTenantId, getSelectedTenantToken } from '@/utilities/getSelectedTenant'
 import { headers as getHeaders } from 'next/headers'
 import { isAccessingViaSubdomain } from '@/collections/utilities/access/isAccessingViaSubdomain'
-import { isTenantAdmin } from '@/collections/utilities/access/isTenantAdmin'
 
 export const readTenantRoles: Access = async (args) => {
   const req = args.req
@@ -37,6 +36,8 @@ export const readTenantRoles: Access = async (args) => {
       ],
     } as Where
   }
+
+  if (superAdmin) return true
 
   return false
 }

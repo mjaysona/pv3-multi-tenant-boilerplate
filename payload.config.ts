@@ -25,7 +25,7 @@ import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 import Users from '@/collections/Users'
 import Pages from '@/collections/Pages'
-import TenantMainMenu from '@/collections/MainMenu'
+import TenantMainMenus from '@/collections/MainMenus'
 import GlobalMainMenu from '@/globals/MainMenu'
 import Media from '@/collections/Media'
 import Features from '@/collections/Features'
@@ -39,7 +39,7 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   //editor: slateEditor({}),
   editor: lexicalEditor(),
-  collections: [Tenants, TenantRoles, Roles, Users, Pages, Media, TenantMainMenu, Features],
+  collections: [Tenants, TenantRoles, Roles, Users, Pages, Media, TenantMainMenus, Features],
   globals: [GlobalMainMenu],
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

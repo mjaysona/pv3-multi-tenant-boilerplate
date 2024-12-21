@@ -1,12 +1,9 @@
 import type { CollectionConfig } from 'payload'
-
-import { readAccess } from './access/read'
 import { externalUsersLogin } from './endpoints/externalUsersLogin'
 import { ensureUniqueUsername } from './hooks/ensureUniqueUsername'
 import { setCookieBasedOnDomain } from './hooks/setCookieBasedOnDomain'
 import { hasSuperAdminRole } from '@/utilities/getRole'
 import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
-import { createAccess } from './access/create'
 import { readUsers } from './access/readUsers'
 import { isTenantAdmin } from '../utilities/access/isTenantAdmin'
 

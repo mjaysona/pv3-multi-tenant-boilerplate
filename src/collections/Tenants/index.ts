@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { canMutateTenant, filterByTenantRead, readByTenant } from './access/byTenant'
+import { readTenants } from './access/readTenants'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { hasSuperAdminRole } from '@/utilities/getRole'
 
@@ -7,7 +7,7 @@ const Tenants: CollectionConfig = {
   slug: 'tenants',
   access: {
     create: ({ req }) => isSuperAdmin(req),
-    read: (access) => readByTenant(access),
+    read: readTenants,
     update: ({ req }) => isSuperAdmin(req),
     delete: ({ req }) => isSuperAdmin(req),
   },

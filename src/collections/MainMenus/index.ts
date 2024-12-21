@@ -5,9 +5,8 @@ import { tenantField } from '@/fields/TenantField'
 import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
 import { filterByTenantRead } from '../access/byTenant'
 import { hasSuperAdminRole } from '@/utilities/getRole'
-import { isTenantAdmin } from '../utilities/access/isTenantAdmin'
 
-const MainMenu: CollectionConfig = {
+const MainMenus: CollectionConfig = {
   slug: 'tenant-main-menu',
   labels: {
     singular: 'Main Menu',
@@ -20,7 +19,8 @@ const MainMenu: CollectionConfig = {
     update: ({ req }) => isSuperAdmin(req),
   },
   admin: {
-    useAsTitle: 'tenant',
+    useAsTitle: 'tenantName',
+    hidden: true,
   },
   fields: [
     {
@@ -34,7 +34,36 @@ const MainMenu: CollectionConfig = {
       maxRows: 6,
     },
     tenantField,
+    {
+      name: 'tenantName',
+      type: 'text',
+      admin: {
+        hidden: true,
+      },
+      hooks: {
+        beforeChange: [
+          async ({ siblingData }) => {
+            delete siblingData.tenantName
+          },
+        ],
+        afterRead: [
+          async ({ siblingData, req: { payload } }) => {
+            if (!siblingData?.tenant) return ''
+
+            const tenant = await payload.findByID({
+              collection: 'tenants',
+              id:
+                typeof siblingData.tenant === 'string'
+                  ? siblingData.tenant
+                  : siblingData.tenant?.id,
+            })
+
+            return tenant?.name
+          },
+        ],
+      },
+    },
   ],
 }
 
-export default MainMenu
+export default MainMenus

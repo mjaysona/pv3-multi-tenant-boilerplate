@@ -191,6 +191,7 @@ export interface TenantMainMenu {
       }[]
     | null;
   tenant?: (string | null) | Tenant;
+  tenantName?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -400,6 +401,7 @@ export interface TenantMainMenuSelect<T extends boolean = true> {
         id?: T;
       };
   tenant?: T;
+  tenantName?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -466,6 +468,7 @@ export interface MainMenu {
       }[]
     | null;
   tenant?: (string | null) | Tenant;
+  tenantName?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -489,6 +492,7 @@ export interface MainMenuSelect<T extends boolean = true> {
         id?: T;
       };
   tenant?: T;
+  tenantName?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

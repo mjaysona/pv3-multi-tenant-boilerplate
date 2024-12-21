@@ -1,26 +1,27 @@
-import type { Access } from 'payload'
+import type { Access, Where } from 'payload'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
-import { getSelectedTenantId, getSelectedTenantToken } from '@/utilities/getSelectedTenant'
 import { isAccessingViaSubdomain } from '@/collections/utilities/access/isAccessingViaSubdomain'
+import { headers as getHeaders } from 'next/headers'
 
-export const readByTenant: Access = async (args) => {
+export const readTenants: Access = async (args) => {
   const req = args.req
   const superAdmin = isSuperAdmin(req)
-  const selectedTenant = getSelectedTenantId(req)
 
   if (await isAccessingViaSubdomain(req)) {
     return {
       and: [
         {
           'domains.domain': {
-            equals: req.headers.get('host'),
+            equals: req.headers.get('host') || (await getHeaders()).get('host'),
           },
         },
       ],
-    }
+    } as Where
   }
 
   if (superAdmin) {
     return true
   }
+
+  return false
 }

@@ -1,6 +1,6 @@
 import { type GlobalConfig, type User } from 'payload'
 
-import TenantMainMenu from '@/collections/MainMenu'
+import TenantMainMenu from '@/collections/MainMenus'
 import { getSelectedTenantId, getSelectedTenantToken } from '@/utilities/getSelectedTenant'
 import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { hasTenantAdminRole } from '@/utilities/getRole'
@@ -16,6 +16,9 @@ const MainMenu: GlobalConfig = {
   access: {
     read: async ({ req }) => {
       const selectedTenantToken = await getSelectedTenantToken()
+
+      if (!Boolean(selectedTenantToken)) return false
+
       const headers = await getHeaders()
       const tenants = req.user?.tenants || []
       const selectedTenant = tenants.find(
@@ -33,6 +36,9 @@ const MainMenu: GlobalConfig = {
     },
     update: async ({ req }) => {
       const selectedTenantToken = await getSelectedTenantToken()
+
+      if (!Boolean(selectedTenantToken)) return false
+
       const headers = await getHeaders()
       const tenants = req.user?.tenants || []
       const selectedTenant = tenants.find(
