@@ -7,14 +7,16 @@ import { setCookieBasedOnDomain } from './hooks/setCookieBasedOnDomain'
 import { hasSuperAdminRole } from '@/utilities/getRole'
 import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
 import { createAccess } from './access/create'
+import { readUsers } from './access/readUsers'
+import { isTenantAdmin } from '../utilities/access/isTenantAdmin'
 
 const Users: CollectionConfig = {
   slug: 'users',
   access: {
-    create: createAccess,
-    delete: ({ req }) => isSuperAdmin(req),
-    read: (access) => readAccess(access),
-    update: ({ req }) => isSuperAdmin(req),
+    create: async ({ req }) => isSuperAdmin(req) || (await isTenantAdmin(req)),
+    delete: async ({ req }) => isSuperAdmin(req) || (await isTenantAdmin(req)),
+    read: readUsers,
+    update: async ({ req }) => isSuperAdmin(req) || (await isTenantAdmin(req)),
   },
   admin: {
     useAsTitle: 'email',

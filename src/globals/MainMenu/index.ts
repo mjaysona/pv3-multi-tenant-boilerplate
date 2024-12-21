@@ -67,8 +67,6 @@ const MainMenu: GlobalConfig = {
 
         const docs = existingTenant.docs && existingTenant.docs[0]
 
-        console.log('docs', docs)
-
         if (docs) {
           await req.payload.update({
             collection: 'tenant-main-menu',

@@ -5,7 +5,7 @@ import { getSelectedTenantId } from '@/utilities/getSelectedTenant'
 import { isAccessingViaSubdomain } from '@/collections/utilities/access/isAccessingViaSubdomain'
 
 // add FieldAccess type
-export const readAccess: Access = (args) => {
+export const readAccess: Access = async (args) => {
   const { req } = args
   if (!req?.user) {
     return false
@@ -41,7 +41,7 @@ export const readAccess: Access = (args) => {
     // give them access only if they have access to tenant ID set in cookie
 
     if (hasTenantAccess) {
-      if (isAccessingViaSubdomain(req)) {
+      if (await isAccessingViaSubdomain(req)) {
         return {
           and: [
             {

@@ -1,10 +1,11 @@
 import { parseCookies, PayloadRequest } from 'payload'
 import { cookies as getCookies } from 'next/headers'
 
-export const getSelectedTenant = (req: PayloadRequest) => {
+export const getSelectedTenant = async (req: PayloadRequest) => {
   const cookies = parseCookies(req.headers)
-  const selectedTenantId = cookies.get('payload-tenant')
+  const selectedTenantId = cookies.get('payload-tenant') || (await getSelectedTenantToken())
   const tenants = req.user?.tenants || []
+
   const selectedTenant = tenants.find(
     ({ tenant }) => typeof tenant !== 'string' && tenant.id === selectedTenantId,
   )

@@ -67,9 +67,9 @@ export const TenantSelector = ({ initialCookie }: { initialCookie?: string }) =>
         credentials: 'include',
       }).then((res) => res.json())
 
-      const optionsToSet = res.docs.map((doc: Tenant) => ({ label: doc.name, value: doc.id }))
+      const optionsToSet = res.docs?.map((doc: Tenant) => ({ label: doc.name, value: doc.id }))
 
-      if (optionsToSet.length === 1) {
+      if (optionsToSet?.length === 1) {
         setCookie('payload-tenant', optionsToSet[0].value)
       }
       setOptions(optionsToSet)

@@ -3,11 +3,11 @@ import { noSpecialCharacters } from '../utilities/noSpecialCharacters'
 import { propertyField } from '@/fields/Property'
 import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
 import { tenantField } from '@/fields/TenantField'
-import { filterByTenantRead } from './access/byTenant'
 import { hasTenantSelected } from '@/fields/utilities/access/hasTenantSelected'
-import { getSelectedTenantId } from '@/utilities/getSelectedTenant'
+import { getSelectedTenantId, getSelectedTenantToken } from '@/utilities/getSelectedTenant'
 import { camelCaseFormat } from '../utilities/camelCaseFormat'
-import { isTenantAdmin } from '../utilities/access/isTenantAdmin'
+import { readTenantRoles } from './access/readTenantRoles'
+import { hasSuperAdminRole, hasTenantAdminRole } from '@/utilities/getRole'
 
 const TenantRoles: CollectionConfig = {
   slug: 'tenant-roles',
@@ -16,13 +16,18 @@ const TenantRoles: CollectionConfig = {
     plural: 'User Roles',
   },
   access: {
-    create: ({ req }) => Boolean(isSuperAdmin(req) || isTenantAdmin(req)),
-    read: (access) => filterByTenantRead(access),
+    create: ({ req }) => isSuperAdmin(req),
+    read: readTenantRoles,
     delete: ({ req }) => isSuperAdmin(req),
     update: ({ req }) => isSuperAdmin(req),
   },
   admin: {
     useAsTitle: 'label',
+    hidden: ({ user }) => {
+      const isTenantAdmin = user?.tenants?.some((tenant) => hasTenantAdminRole(tenant?.roles))
+
+      return !hasSuperAdminRole(user?.roles) && !isTenantAdmin
+    },
   },
   fields: [
     {
@@ -30,9 +35,7 @@ const TenantRoles: CollectionConfig = {
       label: 'Role',
       type: 'text',
       required: true,
-      validate: (value: string) => {
-        return noSpecialCharacters(value)
-      },
+      validate: (value: string) => noSpecialCharacters(value),
     },
     propertyField,
     tenantField,
