@@ -4,18 +4,29 @@ import './index.scss'
 import CustomDefaultViewClient from './index.client'
 import { AdminViewProps } from 'payload'
 import { DefaultTemplate } from '@payloadcms/next/templates'
+import { Gutter } from '@payloadcms/ui'
 
-const CustomDefaultView: React.FC<AdminViewProps> = (props) => {
-  const { initPageResult } = props
-  const { permissions, req, visibleEntities } = initPageResult
-  const { i18n, payload, user } = req
-  const { canAccessAdmin } = permissions
-
+export const CustomDefaultView: React.FC<AdminViewProps> = ({
+  initPageResult,
+  params,
+  searchParams,
+}) => {
+  const { req } = initPageResult
+  const { user } = req
   return (
-    <DefaultTemplate payload={payload} i18n={i18n} visibleEntities={visibleEntities}>
-      <CustomDefaultViewClient user={user} canAccessAdmin={canAccessAdmin} />
+    <DefaultTemplate
+      i18n={initPageResult.req.i18n}
+      locale={initPageResult.locale}
+      params={params}
+      payload={initPageResult.req.payload}
+      permissions={initPageResult.permissions}
+      searchParams={searchParams}
+      user={initPageResult.req.user || undefined}
+      visibleEntities={initPageResult.visibleEntities}
+    >
+      <Gutter>
+        <CustomDefaultViewClient user={user} />
+      </Gutter>
     </DefaultTemplate>
   )
 }
-
-export default CustomDefaultView

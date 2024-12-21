@@ -73,12 +73,20 @@ export default buildConfig({
       afterNavLinks: ['@/components/AfterNavLinks'],
       views: {
         CustomDefaultView: {
-          Component: '@/views/CustomDefault',
+          Component: '@/views/CustomDefault/index#CustomDefaultView',
           path: '/custom-default-view',
         },
         CustomDashboardView: {
-          Component: '@/views/CustomDashboard',
+          Component: '@/views/CustomDashboard/index#CustomDashboardView',
           path: '/dashboard',
+        },
+        CustomStandaloneView: {
+          Component: '@/views/CustomStandaloneView#CustomStandaloneView',
+          path: '/custom-standalone',
+        },
+        MinimalCustomView: {
+          Component: '@/views/CustomMinimalRootView#CustomMinimalRootView',
+          path: '/custom-minimal',
         },
       },
     },

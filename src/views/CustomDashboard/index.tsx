@@ -1,24 +1,33 @@
-import { DefaultTemplate } from '@payloadcms/next/templates'
-import { AdminViewProps } from 'payload'
-import React, { Fragment } from 'react'
-import DashboardClient from './index.client'
+import React from 'react'
+
 import './index.scss'
+import DashboardClient from './index.client'
+import { AdminViewProps } from 'payload'
+import { DefaultTemplate } from '@payloadcms/next/templates'
+import { Gutter } from '@payloadcms/ui'
 
-const CustomDashboardView: React.FC<AdminViewProps> = async (props) => {
-  const { initPageResult } = props
-  const { permissions, req, visibleEntities } = initPageResult
-  const { i18n, payload, user } = req
-  const { canAccessAdmin } = permissions
+export const CustomDashboardView: React.FC<AdminViewProps> = async ({
+  initPageResult,
+  params,
+  searchParams,
+}) => {
+  const { req } = initPageResult
+  const { user, payload } = req
   const { totalDocs } = await payload.count({ collection: 'users' })
-
   return (
-    <Fragment>
-      <DashboardClient user={user} canAccessAdmin={canAccessAdmin} />
-      <DefaultTemplate payload={payload} i18n={i18n} visibleEntities={visibleEntities}>
-        <div
-          className="collection-list"
-          style={{ paddingLeft: 'var(--gutter-h)', paddingRight: 'var(--gutter-h)' }}
-        >
+    <DefaultTemplate
+      i18n={initPageResult.req.i18n}
+      locale={initPageResult.locale}
+      params={params}
+      payload={initPageResult.req.payload}
+      permissions={initPageResult.permissions}
+      searchParams={searchParams}
+      user={initPageResult.req.user || undefined}
+      visibleEntities={initPageResult.visibleEntities}
+    >
+      <Gutter>
+        <DashboardClient user={user} />
+        <div className="collection-list">
           <div className="dashboard">
             <div className="dashboard__wrap">
               <h1 className="dashboard__label">Dashboard</h1>
@@ -39,9 +48,7 @@ const CustomDashboardView: React.FC<AdminViewProps> = async (props) => {
             </div>
           </div>
         </div>
-      </DefaultTemplate>
-    </Fragment>
+      </Gutter>
+    </DefaultTemplate>
   )
 }
-
-export default CustomDashboardView

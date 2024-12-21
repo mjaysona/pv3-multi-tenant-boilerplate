@@ -8,19 +8,20 @@ import { InitPageResult } from 'payload'
 
 type Props = {
   user: InitPageResult['req']['user']
-  canAccessAdmin: boolean
 }
 
-const DashboardClient = ({ user, canAccessAdmin }: Props) => {
+const DashboardClient = ({ user }: Props) => {
   const {
     config: {
       routes: { admin: adminRoute },
     },
   } = useConfig()
 
-  // If an unauthorized user tries to navigate straight to this page,
-  // Boot 'em out
-  if (!user || (user && !canAccessAdmin)) {
+  const isSuperAdmin = user?.roles?.some(
+    (role) => typeof role !== 'string' && role.value === 'superAdmin',
+  )
+
+  if (!user || (user && !isSuperAdmin)) {
     return redirect(`${adminRoute}/unauthorized`)
   }
 

@@ -32,6 +32,8 @@ const AfterNavLinksClient: React.FC = () => {
         <Link className="nav__link" href={`${adminRoute}/dashboard`}>
           Dashboard
         </Link>
+        <Link href={`${adminRoute}/custom-standalone`}>Go to Custom Standalone View</Link>
+        <Link href={`${adminRoute}/custom-minimal`}>Go to Custom Minimal View</Link>
       </div>
     </div>
   )
