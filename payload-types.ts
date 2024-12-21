@@ -160,6 +160,7 @@ export interface Page {
 export interface Media {
   id: string;
   text?: string | null;
+  tenant?: (string | null) | Tenant;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -369,6 +370,7 @@ export interface PagesSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   text?: T;
+  tenant?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
