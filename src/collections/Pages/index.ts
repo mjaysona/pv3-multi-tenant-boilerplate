@@ -1,7 +1,4 @@
 import type { CollectionConfig } from 'payload'
-import { isPayloadAdminPanel } from '../../utilities/isPayloadAdminPanel'
-import { filterByTenantRead } from './access/byTenant'
-import { externalReadAccess } from './access/externalReadAccess'
 import { ensureUniqueSlug } from './hooks/ensureUniqueSlug'
 import { tenantField } from '@/fields/TenantField'
 import { isSuperAdmin } from '../utilities/access/isSuperAdmin'
@@ -9,6 +6,7 @@ import { isTenantAdmin } from '../utilities/access/isTenantAdmin'
 import richText from '@/fields/RichText'
 import { formatSlug } from './hooks/formatSlug'
 import { readPages } from './access/readPages'
+import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 
 const Pages: CollectionConfig = {
   slug: 'pages',
@@ -20,6 +18,23 @@ const Pages: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+    livePreview: {
+      url: ({ data, req }) => {
+        const path = generatePreviewPath({
+          slug: typeof data?.slug === 'string' ? data.slug : '',
+          collection: 'pages',
+          req,
+        })
+
+        return path
+      },
+    },
+    preview: (data, { req }) =>
+      generatePreviewPath({
+        slug: typeof data?.slug === 'string' ? data.slug : '',
+        collection: 'pages',
+        req,
+      }),
   },
   fields: [
     {
@@ -41,6 +56,10 @@ const Pages: CollectionConfig = {
     richText(),
     tenantField,
   ],
+  versions: {
+    drafts: true,
+    maxPerDoc: 10,
+  },
 }
 
 export default Pages

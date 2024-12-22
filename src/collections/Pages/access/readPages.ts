@@ -3,6 +3,7 @@ import { isSuperAdmin } from '@/collections/utilities/access/isSuperAdmin'
 import { getSelectedTenantId, getSelectedTenantToken } from '@/utilities/getSelectedTenant'
 import { headers as getHeaders } from 'next/headers'
 import { isAccessingViaSubdomain } from '@/collections/utilities/access/isAccessingViaSubdomain'
+import { isTenantAdmin } from '@/collections/utilities/access/isTenantAdmin'
 
 export const readPages: Access = async (args) => {
   const req = args.req
@@ -13,24 +14,36 @@ export const readPages: Access = async (args) => {
   if (selectedTenant) {
     if (!superAdmin && !(await isAccessingViaSubdomain(req))) return false
 
+    const querySelectedTenant = {
+      tenant: {
+        equals: selectedTenant,
+      },
+    } as Where
+    const queryActiveTenant = {
+      'tenant.domains.domain': {
+        equals: tenantHost,
+      },
+    } as Where
+
     if (isSuperAdmin(req)) {
       return {
-        tenant: {
-          equals: selectedTenant,
-        },
+        and: [querySelectedTenant],
+      } as Where
+    }
+
+    if (await isTenantAdmin(req)) {
+      return {
+        and: [querySelectedTenant, queryActiveTenant],
       } as Where
     }
 
     return {
       and: [
+        querySelectedTenant,
+        queryActiveTenant,
         {
-          tenant: {
-            equals: selectedTenant,
-          },
-        },
-        {
-          'tenant.domains.domain': {
-            equals: tenantHost,
+          _status: {
+            equals: 'published',
           },
         },
       ],
@@ -39,5 +52,13 @@ export const readPages: Access = async (args) => {
 
   if (superAdmin) return true
 
-  return false
+  return {
+    or: [
+      {
+        _status: {
+          equals: 'published',
+        },
+      },
+    ],
+  }
 }
