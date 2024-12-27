@@ -2,7 +2,7 @@
 
 import type { PayloadAdminBarProps } from 'payload-admin-bar'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { PayloadAdminBar } from 'payload-admin-bar'
 import React, { useState } from 'react'
 
@@ -26,6 +26,7 @@ export const AdminBar: React.FC<{
   const [show, setShow] = useState(false)
   const collection = 'pages'
   const router = useRouter()
+  const path = usePathname()
 
   const onAuthChange = React.useCallback((user) => {
     setShow(user?.id)
@@ -52,7 +53,7 @@ export const AdminBar: React.FC<{
           onAuthChange={onAuthChange}
           onPreviewExit={() => {
             fetch('/next/exit-preview').then(() => {
-              router.push('/')
+              router.push(path)
               router.refresh()
             })
           }}

@@ -21,6 +21,7 @@ const Pages: CollectionConfig = {
     livePreview: {
       url: ({ data, req }) => {
         const path = generatePreviewPath({
+          data,
           slug: typeof data?.slug === 'string' ? data.slug : '',
           collection: 'pages',
           req,
@@ -29,12 +30,14 @@ const Pages: CollectionConfig = {
         return path
       },
     },
-    preview: (data, { req }) =>
-      generatePreviewPath({
+    preview: (data, { req }) => {
+      return generatePreviewPath({
+        data,
         slug: typeof data?.slug === 'string' ? data.slug : '',
         collection: 'pages',
         req,
-      }),
+      })
+    },
   },
   fields: [
     {
@@ -57,7 +60,9 @@ const Pages: CollectionConfig = {
     tenantField,
   ],
   versions: {
-    drafts: true,
+    drafts: {
+      validate: true,
+    },
     maxPerDoc: 10,
   },
 }

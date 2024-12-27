@@ -52,13 +52,5 @@ export const readPages: Access = async (args) => {
 
   if (superAdmin) return true
 
-  return {
-    or: [
-      {
-        _status: {
-          equals: 'published',
-        },
-      },
-    ],
-  }
+  return false
 }
